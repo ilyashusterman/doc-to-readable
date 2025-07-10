@@ -13,6 +13,7 @@ export default defineConfig({
   build: {
     outDir: path.resolve(__dirname, '../docs'),
     emptyOutDir: true,
+    target: 'esnext',
   },
   ssr: {
     // Ensure node-fetch is treated as an external module in SSR
