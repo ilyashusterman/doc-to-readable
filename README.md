@@ -40,5 +40,14 @@ const sections = await splitReadableDocs('<h1>Title</h1>\n<p>Content</p>', { typ
 - `docToMarkdown(input: string, options: { type: 'url' | 'html' }): Promise<string>`
 - `splitReadableDocs(input: string, options: { type: 'url' | 'html' }): Promise<Array<{ section: string, title: string | null }>>`
 
+## Main Dependencies
+- [@mozilla/readability](https://github.com/mozilla/readability): Extracts main article content from HTML.
+- [turndown](https://github.com/mixmark-io/turndown): Converts HTML to Markdown.
+- [turndown-plugin-gfm](https://github.com/domchristie/turndown-plugin-gfm): GitHub Flavored Markdown support for Turndown.
+- [remark](https://github.com/remarkjs/remark): Markdown processing (used for splitting and parsing).
+- [dompurify](https://github.com/cure53/DOMPurify): Sanitizes HTML input.
+- [jsdom](https://github.com/jsdom/jsdom): Emulates browser DOM in Node.js for HTML parsing.
+- [pdfjs-dist](https://github.com/mozilla/pdfjs-dist): PDF to HTML conversion.
+
 ## License
 MIT 
