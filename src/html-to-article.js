@@ -1,5 +1,4 @@
 import { parseDomFromString } from './parse-dom.js';
-import { extractArticleFromDom } from './extract-article.js';
 import { convertToMarkdown } from './markdown-converter.js';
 
 const DEFAULT_MAX_SIZE_BYTES = 2 * 1024 * 1024; // 2MB
@@ -18,25 +17,37 @@ export async function htmlToArticle(htmlText, options = {}) {
   }
 
   // 1. Parse HTML string to DOM
-  const doc = await parseDomFromString(htmlText);
+  let doc;
+  if (typeof window === 'undefined') {
+    const { JSDOM } = await import('jsdom');
+    doc = new JSDOM(htmlText).window.document;
+  } else {
+    const parser = new window.DOMParser();
+    doc = parser.parseFromString(htmlText, 'text/html');
+  }
 
   // 2. Extract document title (if present)
   const titleEl = doc.querySelector('title');
   const title = titleEl ? titleEl.textContent : '';
 
-  // 3. Extract main content (Readability)
-  let readable = await extractArticleFromDom(doc);
-  if (!readable) {
-    readable = doc.documentElement.outerHTML;
+  // 3. Extract main content (inner HTML of <main>)
+  let mainContent = '';
+  const main = doc.querySelector('main');
+  if (main) {
+    mainContent = main.innerHTML;
+  } else {
+    // fallback: use body content
+    mainContent = doc.body.innerHTML;
   }
 
-  // 4. Convert to Markdown
-  let markdown = convertToMarkdown(readable);
-
-  // 5. Optionally prepend title
+  // 4. Prepend title as <h1> to HTML if present
+  let htmlWithTitle = mainContent;
   if (title) {
-    markdown = `# ${title}\n\n${markdown}`;
+    htmlWithTitle = `<h1>${title}</h1>\n` + mainContent;
   }
+
+  // 5. Convert to Markdown
+  let markdown = convertToMarkdown(htmlWithTitle);
 
   return markdown;
 } 

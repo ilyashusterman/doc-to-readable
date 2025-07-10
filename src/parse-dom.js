@@ -2,6 +2,22 @@ import DOMPurify from 'dompurify';
 // DOM creation and element extraction utilities
 // Exports: parseDomFromString, extractElementById
 
+let DOMPurifyInstance;
+const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
+
+async function ensureDomPurifyInstance() {
+  if (DOMPurifyInstance) return DOMPurifyInstance;
+  if (isBrowser) {
+    DOMPurifyInstance = (await import('dompurify')).default;
+    return DOMPurifyInstance;
+  } else {
+    const { JSDOM } = await import('jsdom');
+    const window = (new JSDOM('')).window;
+    const createDOMPurify = (await import('dompurify')).default;
+    DOMPurifyInstance = createDOMPurify(window);
+    return DOMPurifyInstance;
+  }
+}
 
 // DOMPurify config to remove styles, images, and CSS-related tags/attributes
 const PURIFY_CONFIG = {
@@ -10,8 +26,10 @@ const PURIFY_CONFIG = {
 };
 
 // Helper to sanitize HTML
-function sanitizeHtml(html) {
-  return DOMPurify.sanitize(html, PURIFY_CONFIG);
+async function sanitizeHtml(html) {
+  const purify = await ensureDomPurifyInstance();
+  if (!purify) return html;
+  return purify.sanitize(html, PURIFY_CONFIG);
 }
 
 /**
@@ -21,11 +39,10 @@ function sanitizeHtml(html) {
  * @returns {Promise<Document>}
  */
 export async function parseDomFromString(html, url = 'https://example.com'){
-  const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
   if (isBrowser) {
     return new window.DOMParser().parseFromString(html, 'text/html');
   } else {
     const { JSDOM } = await import('jsdom');
-    return new JSDOM(sanitizeHtml(html), { url }).window.document;
+    return new JSDOM(await sanitizeHtml(html), { url }).window.document;
   }
 }

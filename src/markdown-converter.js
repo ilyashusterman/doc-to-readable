@@ -3,7 +3,7 @@
 import TurndownService from 'turndown';
 import { gfm, tables} from 'turndown-plugin-gfm';
 
-const turndownService = new TurndownService();
+const turndownService = new TurndownService({ headingStyle: 'atx' });
 turndownService.use(gfm);
 
 export function convertToMarkdown(html) {

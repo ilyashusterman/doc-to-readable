@@ -8,4 +8,4 @@ export interface DocToReadableOptions {
 }
 
 export function docToMarkdown(input: string, options?: DocToReadableOptions): Promise<string>;
-export function splitReadableDocs(input: string, options?: DocToReadableOptions): Promise<ReadableSection[]>; 
+export function splitReadableDocs(input: string): Promise<ReadableSection[]>; 

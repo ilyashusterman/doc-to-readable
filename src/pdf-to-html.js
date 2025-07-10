@@ -1,13 +1,21 @@
-import { getDocument } from 'pdfjs-dist';
-import * as pdfjsLib from 'pdfjs-dist';
+let getDocument, pdfjsLib;
+let pdfjsAvailable = true;
 
-// Configure pdfjs worker
-const pdfjsVersion = '5.3.93';
-const workerPath = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsVersion}/build/pdf.worker.min.mjs`;
-if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = workerPath;
-} else {
-  console.log('Running in a non-browser environment, workerSrc not set.');
+try {
+  // Dynamic import for environments that support pdfjs-dist
+  ({ getDocument } = await import('pdfjs-dist'));
+  pdfjsLib = await import('pdfjs-dist');
+  // Configure pdfjs worker
+  const pdfjsVersion = '5.3.93';
+  const workerPath = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsVersion}/build/pdf.worker.min.mjs`;
+  if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = workerPath;
+  } else {
+    console.log('Running in a non-browser environment, workerSrc not set.');
+  }
+} catch (e) {
+  pdfjsAvailable = false;
+  console.warn('[pdf-to-html] pdfjs-dist not available or failed to load. PDF conversion is disabled in this environment.');
 }
 
 // Escape HTML characters, preserve math and special characters
@@ -171,6 +179,10 @@ function detectTable(paragraphs, xTolerance) {
 
 // Main conversion function with custom title
 export async function pdfToHtmlFromBuffer(arrayBuffer, customTitle = '') {
+  if (!pdfjsAvailable) {
+    console.warn('[pdf-to-html] pdfjs-dist not available; cannot convert PDF to HTML.');
+    throw new Error('pdfjs-dist not available; PDF conversion is disabled in this environment.');
+  }
   try {
     const pdfDocument = await getDocument({ data: arrayBuffer }).promise;
     const meta = await pdfDocument.getMetadata().catch(() => ({ info: { Title: '' } }));

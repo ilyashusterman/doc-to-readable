@@ -12,48 +12,90 @@ import { marked } from 'marked';
  * @returns {Array<{title: string|null, content: string}>} - Array of sections
  */
 export function splitMarkdownByHeaders(markdown) {
-  // Parse markdown into tokens
-  const tokens = marked.lexer(markdown);
+  if (!markdown || markdown.trim() === '') {
+    return [{ title: null, content: '' }];
+  }
+  const lines = markdown.split(/\r?\n/);
   const sections = [];
-  let currentSection = null;
+  let currentTitle = null;
+  let currentContent = [];
+  let setextCandidate = null;
+  let inCodeBlock = false;
+  let codeBlockFence = '';
 
-  tokens.forEach(token => {
-    if (token.type === 'heading') {
-      // Start a new section
-      if (currentSection) {
-        sections.push(currentSection);
-      }
-      currentSection = {
-        title: token.text.replace(/[*_~`[\]]/g, '').trim(), // Strip markdown symbols
-        content: token.raw // Include raw header line
-      };
-    } else if (currentSection) {
-      // Append to current section
-      currentSection.content += token.raw || '';
-    } else {
-      // Handle pre-header content
-      if (!sections.length) {
-        sections.push({
-          title: null,
-          content: token.raw || ''
-        });
-      } else {
-        // Append to last section if no current section
-        sections[sections.length - 1].content += token.raw || '';
-      }
+  function pushSection() {
+    if (currentTitle !== null || currentContent.length > 0) {
+      sections.push({
+        title: currentTitle,
+        content: currentContent.join('\n').trim()
+      });
     }
-  });
-
-  // Push final section if it exists
-  if (currentSection) {
-    sections.push(currentSection);
+    currentTitle = null;
+    currentContent = [];
   }
 
-  // Trim content and return
-  return sections.map(section => ({
-    title: section.title,
-    content: section.content
-  }));
-  // 
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    // Detect start/end of fenced code block
+    const fenceMatch = line.match(/^([`~]{3,})(.*)$/);
+    if (fenceMatch) {
+      if (!inCodeBlock) {
+        inCodeBlock = true;
+        codeBlockFence = fenceMatch[1];
+      } else if (line.startsWith(codeBlockFence)) {
+        inCodeBlock = false;
+        codeBlockFence = '';
+      }
+      if (setextCandidate !== null) {
+        currentContent.push(setextCandidate);
+        setextCandidate = null;
+      }
+      currentContent.push(line);
+      continue;
+    }
+    if (inCodeBlock) {
+      if (setextCandidate !== null) {
+        currentContent.push(setextCandidate);
+        setextCandidate = null;
+      }
+      currentContent.push(line);
+      continue;
+    }
+    // ATX header
+    const atxMatch = line.match(/^(#{1,6})\s+(.*)$/);
+    if (atxMatch) {
+      pushSection();
+      currentTitle = atxMatch[2].trim();
+      currentContent.push(line);
+      continue;
+    }
+    // Setext header candidate (previous line)
+    if (setextCandidate !== null && /^(=+|-+)\s*$/.test(line)) {
+      pushSection();
+      currentTitle = setextCandidate.trim();
+      currentContent.push(setextCandidate); // header line
+      currentContent.push(line); // underline
+      setextCandidate = null;
+      continue;
+    }
+    // If this line could be a Setext header (needs to be followed by === or ---)
+    if (i + 1 < lines.length && /^(=+|-+)\s*$/.test(lines[i + 1])) {
+      setextCandidate = line;
+      continue;
+    }
+    // Normal content
+    if (setextCandidate !== null) {
+      currentContent.push(setextCandidate);
+      setextCandidate = null;
+    }
+    currentContent.push(line);
+  }
+  // Flush any remaining setext candidate
+  if (setextCandidate !== null) {
+    currentContent.push(setextCandidate);
+  }
+  pushSection();
+  // Remove empty sections
+  return sections.filter(s => s.content.length > 0 || s.title !== null);
 }
 
