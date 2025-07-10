@@ -30,7 +30,7 @@ const mdFromUrl = await docToMarkdown('https://example.com', { type: 'url' });
 ```js
 import { splitReadableDocs } from 'doc-to-readable';
 
-const sections = await splitReadableDocs('<h1>Title</h1>\n<p>Content</p>');
+const sections = await splitReadableDocs('# Title\n\nContent here\n\n## Subtitle\n\nMore content');
 // sections: [{ title: 'Title', section: '...' }, ...]
 ```
 
@@ -61,7 +61,7 @@ const md = await docToMarkdown(html, { type: 'html' });
 - [remark](https://github.com/remarkjs/remark): Markdown processing (used for splitting and parsing).
 - [dompurify](https://github.com/cure53/DOMPurify): Sanitizes HTML input.
 - [jsdom](https://github.com/jsdom/jsdom): Emulates browser DOM in Node.js for HTML parsing.
-- [pdfjs-dist](https://github.com/mozilla/pdfjs-dist): PDF to HTML conversion.
+- [pdf.js](https://github.com/mozilla/pdf.js): PDF to HTML conversion.
 
 ## License
 MIT 
