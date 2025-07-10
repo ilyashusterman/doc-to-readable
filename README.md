@@ -1,7 +1,5 @@
 # doc-to-readable
 
-> **TEST UPDATE**: This README was updated on $(date) to verify GitHub sync works correctly.
-
 Universal document-to-markdown and section splitter for HTML, URLs, and PDFs.
 
 ## Features
