@@ -1,5 +1,7 @@
 # doc-to-readable
 
+> **TEST UPDATE**: This README was updated on $(date) to verify GitHub sync works correctly.
+
 Universal document-to-markdown and section splitter for HTML, URLs, and PDFs.
 
 ## Features
@@ -25,11 +27,12 @@ const md = await docToMarkdown('<h1>Hello</h1><p>World</p>', { type: 'html' });
 const mdFromUrl = await docToMarkdown('https://example.com', { type: 'url' });
 ```
 
+
 ### Split into Sections
 ```js
 import { splitReadableDocs } from 'doc-to-readable';
 
-const sections = await splitReadableDocs('<h1>Title</h1>\n<p>Content</p>', { type: 'html' });
+const sections = await splitReadableDocs('<h1>Title</h1>\n<p>Content</p>');
 // sections: [{ title: 'Title', section: '...' }, ...]
 ```
 
@@ -38,7 +41,7 @@ const sections = await splitReadableDocs('<h1>Title</h1>\n<p>Content</p>', { typ
 
 ## API
 - `docToMarkdown(input: string, options: { type: 'url' | 'html' }): Promise<string>`
-- `splitReadableDocs(input: string, options: { type: 'url' | 'html' }): Promise<Array<{ section: string, title: string | null }>>`
+- `splitReadableDocs(input: string): Promise<Array<{ section: string, title: string | null }>>`
 
 ## Main Dependencies
 - [@mozilla/readability](https://github.com/mozilla/readability): Extracts main article content from HTML.
