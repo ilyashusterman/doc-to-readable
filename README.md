@@ -40,6 +40,19 @@ const sections = await splitReadableDocs('<h1>Title</h1>\n<p>Content</p>');
 ## API
 - `docToMarkdown(input: string, options: { type: 'url' | 'html' }): Promise<string>`
 - `splitReadableDocs(input: string): Promise<Array<{ section: string, title: string | null }>>`
+- `pdfToHtmlFromBuffer(buffer: ArrayBuffer): Promise<string>` - Convert PDF buffer to HTML
+
+### PDF Buffer to HTML
+```js
+import { pdfToHtmlFromBuffer } from 'doc-to-readable';
+
+// Convert PDF buffer to HTML
+const pdfBuffer = await fetch('document.pdf').then(res => res.arrayBuffer());
+const html = await pdfToHtmlFromBuffer(pdfBuffer);
+
+// Then convert to markdown
+const md = await docToMarkdown(html, { type: 'html' });
+```
 
 ## Main Dependencies
 - [@mozilla/readability](https://github.com/mozilla/readability): Extracts main article content from HTML.
