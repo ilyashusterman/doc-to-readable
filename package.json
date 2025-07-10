@@ -1,0 +1,44 @@
+{
+  "type": "module",
+  "name": "doc-to-readable",
+  "version": "1.0.1",
+  "description": "Universal document-to-markdown and section splitter for HTML, URLs, and PDFs.",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "files": [
+    "src/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ilyashusterman/doc-to-readable.git"
+  },
+  "keywords": [
+    "markdown",
+    "split",
+    "document",
+    "pdf",
+    "html",
+    "url",
+    "sections",
+    "parser"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@mozilla/readability": "^0.6.0",
+    "dompurify": "^3.2.6",
+    "jsdom": "^26.1.0",
+    "marked": "^11.1.1",
+    "pdfjs-dist": "^4.2.67",
+    "turndown": "^7.2.0",
+    "turndown-plugin-gfm": "^1.0.2"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.28.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.12",
+    "babel-jest": "^30.0.4",
+    "jest": "^30.0.4",
+    "ts-jest": "^29.4.0"
+  }
+}
