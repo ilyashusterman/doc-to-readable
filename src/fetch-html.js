@@ -55,8 +55,9 @@ export async function fetchHtml(url, options = {}) {
     const res = await universalFetch(url, options);
     const contentType = res.headers.get('content-type') || '';
     const isHtml = contentType.toLowerCase().includes('text/html') || contentType.toLowerCase().includes('application/xhtml+xml');
+    const isText = contentType.toLowerCase().includes('text/plain')
     const isPdf = contentType.toLowerCase().includes('pdf');
-    if (!isHtml && !isPdf) {
+    if (!isHtml && !isPdf && !isText) {
       throw new Error(`Unsupported content type: ${contentType}. Only HTML and PDF are supported.`);
     }
     if (isPdf) {
