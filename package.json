@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "doc-to-readable",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Universal document-to-markdown and section splitter for HTML, URLs, and PDFs.",
   "main": "src/index.js",
   "types": "src/index.d.ts",
