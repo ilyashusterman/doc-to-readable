@@ -1,21 +1,27 @@
 let getDocument, pdfjsLib;
 let pdfjsAvailable = true;
+let pdfjsInitialized = false;
 
-try {
-  // Dynamic import for environments that support pdfjs-dist
-  ({ getDocument } = await import('pdfjs-dist'));
-  pdfjsLib = await import('pdfjs-dist');
-  // Configure pdfjs worker
-  const pdfjsVersion = '5.3.93';
-  const workerPath = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsVersion}/build/pdf.worker.min.mjs`;
-  if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = workerPath;
-  } else {
-    console.log('Running in a non-browser environment, workerSrc not set.');
+async function initPdfjs() {
+  if (pdfjsInitialized) return;
+  try {
+    const pdfjsDist = await import('pdfjs-dist');
+    getDocument = pdfjsDist.getDocument;
+    pdfjsLib = pdfjsDist;
+    // Configure pdfjs worker
+    const pdfjsVersion = '5.3.93';
+    const workerPath = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsVersion}/build/pdf.worker.min.mjs`;
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = workerPath;
+    } else {
+      console.log('Running in a non-browser environment, workerSrc not set.');
+    }
+    pdfjsAvailable = true;
+  } catch (e) {
+    pdfjsAvailable = false;
+    console.warn('[pdf-to-html] pdfjs-dist not available or failed to load. PDF conversion is disabled in this environment.');
   }
-} catch (e) {
-  pdfjsAvailable = false;
-  console.warn('[pdf-to-html] pdfjs-dist not available or failed to load. PDF conversion is disabled in this environment.');
+  pdfjsInitialized = true;
 }
 
 // Escape HTML characters, preserve math and special characters
@@ -179,6 +185,7 @@ function detectTable(paragraphs, xTolerance) {
 
 // Main conversion function with custom title
 export async function pdfToHtmlFromBuffer(arrayBuffer, customTitle = '') {
+  await initPdfjs();
   if (!pdfjsAvailable) {
     console.warn('[pdf-to-html] pdfjs-dist not available; cannot convert PDF to HTML.');
     throw new Error('pdfjs-dist not available; PDF conversion is disabled in this environment.');

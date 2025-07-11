@@ -2,8 +2,12 @@ import path from "path";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
+// Set base path depending on environment
+// Check if we're building for GitHub Pages (docs folder) or running locally
+const isBuildingForGitHubPages = process.argv.includes('build');
+
 export default defineConfig({
-  base: '/doc-to-readable/',
+  base: isBuildingForGitHubPages ? '/doc-to-readable/' : '/',
   plugins: [react()],
   resolve: {
     alias: {
