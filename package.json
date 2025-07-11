@@ -25,6 +25,11 @@
   ],
   "author": "",
   "license": "MIT",
+  "scripts": {
+    "test": "node --experimental-vm-modules ./node_modules/.bin/jest src/__tests__/",
+    "test:watch": "node --experimental-vm-modules ./node_modules/.bin/jest src/__tests__/ --watch",
+    "test:standalone": "node src/__tests__/fetch-html-standalone-test.js"
+  },
   "dependencies": {
     "@mozilla/readability": "^0.6.0",
     "dompurify": "^3.2.6",
