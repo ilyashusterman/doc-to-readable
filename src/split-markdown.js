@@ -29,7 +29,7 @@ export function splitMarkdownByHeaders(markdown) {
         title: currentTitle,
         content: currentContent.join('\n').trim()
       });
-    }
+      }
     currentTitle = null;
     currentContent = [];
   }
@@ -87,7 +87,7 @@ export function splitMarkdownByHeaders(markdown) {
     if (setextCandidate !== null) {
       currentContent.push(setextCandidate);
       setextCandidate = null;
-    }
+      }
     currentContent.push(line);
   }
   // Flush any remaining setext candidate

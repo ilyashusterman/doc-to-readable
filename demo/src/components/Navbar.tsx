@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./mode-toggle";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
 export type DemoKey = "markdown" | "rag";
 
@@ -48,6 +49,20 @@ export const Navbar: React.FC<NavbarProps> = ({ active, onSelect }) => {
         >
           Doc to RAG-Doc
         </Button>
+        <a
+          href="https://github.com/ilyashusterman/doc-to-readable"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full md:w-auto"
+        >
+          <Button
+            variant="outline"
+            className="flex items-center gap-2 text-base font-semibold px-4 w-full md:w-auto"
+            asChild
+          >
+            <span className="flex items-center"><GitHubLogoIcon className="w-5 h-5 mr-2" />Contribute</span>
+          </Button>
+        </a>
       </div>
       {/* Mode toggle: right on mobile, bottom on sidebar */}
       <div className="absolute right-4 top-1/2 -translate-y-1/2 md:static md:translate-y-0 md:mt-auto md:mb-6 md:flex md:justify-center">

@@ -8,13 +8,13 @@ async function initPdfjs() {
     const pdfjsDist = await import('pdfjs-dist');
     getDocument = pdfjsDist.getDocument;
     pdfjsLib = pdfjsDist;
-    // Configure pdfjs worker
-    const pdfjsVersion = '5.3.93';
-    const workerPath = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsVersion}/build/pdf.worker.min.mjs`;
-    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-      pdfjsLib.GlobalWorkerOptions.workerSrc = workerPath;
-    } else {
-      console.log('Running in a non-browser environment, workerSrc not set.');
+// Configure pdfjs worker
+const pdfjsVersion = '5.3.93';
+const workerPath = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsVersion}/build/pdf.worker.min.mjs`;
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = workerPath;
+} else {
+  console.log('Running in a non-browser environment, workerSrc not set.');
     }
     pdfjsAvailable = true;
   } catch (e) {
