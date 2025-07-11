@@ -1,4 +1,9 @@
 [![CI](https://github.com/ilyashusterman/doc-to-readable/actions/workflows/node.js.yml/badge.svg)](https://github.com/ilyashusterman/doc-to-readable/actions)
+[![npm version](https://badge.fury.io/js/doc-to-readable.svg)](https://www.npmjs.com/package/doc-to-readable)
+[![npm downloads](https://img.shields.io/npm/dm/doc-to-readable.svg)](https://www.npmjs.com/package/doc-to-readable)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-43853D?logo=node.js&logoColor=white)](https://nodejs.org/)
 
 # doc-to-readable
 
