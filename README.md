@@ -1,8 +1,11 @@
+[![CI](https://github.com/ilyashusterman/doc-to-readable/actions/workflows/node.js.yml/badge.svg)](https://github.com/ilyashusterman/doc-to-readable/actions)
+
 # doc-to-readable
 
 Universal document-to-markdown and section splitter for HTML, URLs, and PDFs.
 
 ## Features
+- **Cross-platform:** Works in both Node.js and browser environments
 - Convert HTML, URLs, or PDFs to Markdown
 - Split Markdown into logical sections by headers
 - Works in Node.js and browser (PDF support is best in Node.js)
