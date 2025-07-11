@@ -22,7 +22,8 @@ async function ensureDomPurifyInstance() {
 // DOMPurify config to remove styles, images, and CSS-related tags/attributes
 const PURIFY_CONFIG = {
   FORBID_TAGS: ['style', 'img', 'link'],
-  FORBID_ATTR: ['style']
+  FORBID_ATTR: ['style'],
+  ALLOWED_TAGS: ['title', 'head', 'body', 'main', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'span', 'a', 'ul', 'ol', 'li', 'blockquote', 'pre', 'code', 'em', 'strong', 'b', 'i', 'u', 's', 'del', 'ins', 'mark', 'small', 'sub', 'sup', 'br', 'hr', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'caption', 'colgroup', 'col']
 };
 
 // Helper to sanitize HTML
@@ -38,11 +39,13 @@ async function sanitizeHtml(html) {
  * @param {string} [url]
  * @returns {Promise<Document>}
  */
-export async function parseDomFromString(html, url = 'https://example.com'){
-  if (isBrowser) {
-    return new window.DOMParser().parseFromString(html, 'text/html');
-  } else {
+export async function parseDomFromString(html){
+  if (isBrowser){
+    const parser = new window.DOMParser();
+    return parser.parseFromString(html, 'text/html');
+  }else{
     const { JSDOM } = await import('jsdom');
-    return new JSDOM(await sanitizeHtml(html), { url }).window.document;
+    return new JSDOM(await sanitizeHtml(html)).window.document;
   }
 }
+

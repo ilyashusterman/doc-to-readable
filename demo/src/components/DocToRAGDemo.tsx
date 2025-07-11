@@ -12,6 +12,7 @@ export const DocToRAGDemo: React.FC = () => {
   } = useDocInput();
   const [json, setJson] = useState<string>("");
   const [showOutputOnly, setShowOutputOnly] = useState<boolean>(false);
+  const [executionTime, setExecutionTime] = useState<{ markdown: number; split: number }>({ markdown: 0, split: 0 });
 
   // Download logic
   const handleDownload = () => {
@@ -28,24 +29,49 @@ export const DocToRAGDemo: React.FC = () => {
   const handleConvert = async () => {
     setLoading(true);
     setError("");
+    setExecutionTime({ markdown: 0, split: 0 });
+    
     try {
       let markdown = "";
+      let markdownTime = 0;
+      let splitTime = 0;
+      
       if (inputType === "file" && file) {
         const text = await file.text();
+        const markdownStart = performance.now();
         markdown = await docToMarkdown(text, { type: 'html' });
+        markdownTime = performance.now() - markdownStart;
+        
+        const splitStart = performance.now();
         const sections = await splitReadableDocs(markdown);
+        splitTime = performance.now() - splitStart;
+        
         setJson(JSON.stringify(sections, null, 2));
       } else if (inputType === "url" && url) {
+        const markdownStart = performance.now();
         markdown = await docToMarkdown(url, { type: 'url' });
+        markdownTime = performance.now() - markdownStart;
+        
+        const splitStart = performance.now();
         const sections = await splitReadableDocs(markdown);
+        splitTime = performance.now() - splitStart;
+        
         setJson(JSON.stringify(sections, null, 2));
       } else if (inputType === "html" && html) {
+        const markdownStart = performance.now();
         markdown = await docToMarkdown(html, { type: 'html' });
+        markdownTime = performance.now() - markdownStart;
+        
+        const splitStart = performance.now();
         const sections = await splitReadableDocs(markdown);
+        splitTime = performance.now() - splitStart;
+        
         setJson(JSON.stringify(sections, null, 2));
       } else {
         throw new Error("No input provided");
       }
+      
+      setExecutionTime({ markdown: markdownTime, split: splitTime });
       setShowOutputOnly(true);
     } catch (err: any) {
       setError(err.message || String(err));
@@ -95,6 +121,11 @@ export const DocToRAGDemo: React.FC = () => {
             <CardDescription className="text-base md:text-lg text-muted-foreground">
               Preview and download your JSON output.
             </CardDescription>
+            {executionTime.markdown > 0 && (
+              <div className="mt-2 text-sm text-green-600 font-medium">
+                ⚡ Converted in {executionTime.markdown.toFixed(0)}ms | Split in {executionTime.split.toFixed(0)}ms
+              </div>
+            )}
             {showOutputOnly && (
               <div className="mt-2">
                 <button

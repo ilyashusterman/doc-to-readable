@@ -1,6 +1,6 @@
 # doc-to-readable Makefile
 
-.PHONY: test test-watch build-demo deploy-demo clean help
+.PHONY: test test-watch test-standalone test-benchmark build deploy clean publish
 
 # Default target
 help:
@@ -16,40 +16,35 @@ help:
 
 # Run all tests
 test:
-	@echo "Running tests..."
-	node --experimental-vm-modules ./node_modules/.bin/jest src/__tests__/
+	npm test
 
 # Run tests in watch mode
 test-watch:
-	@echo "Running tests in watch mode..."
-	node --experimental-vm-modules ./node_modules/.bin/jest src/__tests__/ --watch
+	npm run test:watch
 
-# Run standalone fetch-html test
+# Run standalone test
 test-standalone:
-	@echo "Running standalone fetch-html test..."
-	node src/__tests__/fetch-html-standalone-test.js
+	npm run test:standalone
 
-# Build the demo app
-build-demo:
-	@echo "Building demo app..."
+# Run benchmark tests
+test-benchmark:
+	npm run test:benchmark
+
+# Build the demo
+build:
 	cd demo && npm run build
 
 # Deploy demo to GitHub Pages
-deploy-demo: build-demo
-	@echo "Deploying demo to GitHub Pages..."
-	git add docs
-	git commit -m "chore: deploy demo to GitHub Pages" || true
-	git push
+deploy: build
+	cd demo && git add docs/ && git commit -m "Update demo build" && git push
 
 # Clean build artifacts
 clean:
-	@echo "Cleaning build artifacts..."
-	rm -rf docs demo/dist
-	rm -f *.tgz
+	rm -rf demo/docs/
+	rm -rf node_modules/
+	rm -rf demo/node_modules/
 
-# Bump version and publish to npm
+# Publish to npm
 publish:
-	@echo "Bumping version and publishing to npm..."
-	npm version patch -m "chore: bump version for release"
-	git push --follow-tags
+	npm version patch
 	npm publish 

@@ -14,6 +14,7 @@ export const DocToMarkdownDemo: React.FC = () => {
   const [json] = useState<string>("");
   const [showMarkdownCode, setShowMarkdownCode] = useState<boolean>(true);
   const [showOutputOnly, setShowOutputOnly] = useState<boolean>(false);
+  const [executionTime, setExecutionTime] = useState<number>(0);
 
   // Download logic
   const handleDownload = (type: "markdown" | "json") => {
@@ -32,6 +33,10 @@ export const DocToMarkdownDemo: React.FC = () => {
   const handleConvert = async () => {
     setLoading(true);
     setError("");
+    setExecutionTime(0);
+    
+    const startTime = performance.now();
+    
     try {
       let htmlContent = html;
       let md: string = "";
@@ -49,6 +54,10 @@ export const DocToMarkdownDemo: React.FC = () => {
       } else {
         throw new Error("No HTML content to process");
       }
+      
+      const endTime = performance.now();
+      setExecutionTime(endTime - startTime);
+      
       setHtml(htmlContent);
       setMarkdown(md);
       setShowMarkdownCode(false);
@@ -105,6 +114,11 @@ export const DocToMarkdownDemo: React.FC = () => {
               <CardDescription className="text-base md:text-lg text-muted-foreground">
                 View and download your Markdown or JSON output.
               </CardDescription>
+              {executionTime > 0 && (
+                <div className="mt-2 text-sm text-green-600 font-medium">
+                  ⚡ Converted in {executionTime.toFixed(0)}ms
+                </div>
+              )}
               {showOutputOnly && (
                 <div className="mt-2">
                   <button
