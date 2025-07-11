@@ -72,11 +72,11 @@ The library is optimized for high performance across different file sizes. Here 
 
 ### Key Performance Features
 
-- **⚡ Ultra-fast splitting**: `splitReadableDocs` processes documents in sub-millisecond time
-- **📈 Linear scaling**: Processing time scales linearly with file size
-- **💾 Memory efficient**: Optimized memory usage for large documents
-- **🛡️ Size limits**: Built-in 2MB limit prevents memory issues
-- **🎯 Real-time ready**: Sub-second processing for documents up to 100KB
+- **Ultra-fast splitting**: `splitReadableDocs` processes documents in sub-millisecond time
+- **Linear scaling**: Processing time scales linearly with file size
+- **Memory efficient**: Optimized memory usage for large documents
+- **Size limits**: Built-in 2MB limit prevents memory issues
+- **Real-time ready**: Sub-second processing for documents up to 100KB
 
 ### Performance Benchmarks
 
