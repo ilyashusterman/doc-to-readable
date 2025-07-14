@@ -33,6 +33,9 @@ const md = await docToMarkdown('<h1>Hello</h1><p>World</p>', { type: 'html' });
 
 // From URL
 const mdFromUrl = await docToMarkdown('https://example.com', { type: 'url' });
+
+// From Markdown (returns as-is)
+const mdFromMarkdown = await docToMarkdown('# Title\nContent', { type: 'markdown' });
 ```
 
 
@@ -40,16 +43,28 @@ const mdFromUrl = await docToMarkdown('https://example.com', { type: 'url' });
 ```js
 import { splitReadableDocs } from 'doc-to-readable';
 
+// From Markdown
 const sections = await splitReadableDocs('# Title\n\nContent here\n\n## Subtitle\n\nMore content');
-// sections: [{ title: 'Title', section: '...' }, ...]
+// sections: [{ title: 'Title', content: 'Content here' }, { title: 'Subtitle', content: 'More content' }]
+
+// From HTML
+const html = '<h1>Title</h1><p>Content</p><h2>Subtitle</h2><p>More</p>';
+const htmlSections = await splitReadableDocs(html, { type: 'html' });
+
+// From URL
+const urlSections = await splitReadableDocs('https://example.com', { type: 'url' });
 ```
 
 ### PDF Support
-- For PDF files, convert to HTML first using the included helpers, then use `docToMarkdown` or `splitReadableDocs`.
+- For PDF files, convert to HTML first using the included helpers, then use `docToMarkdown` or `splitReadableDocs` with `{ type: 'html' }`.
 
 ## API
-- `docToMarkdown(input: string, options: { type: 'url' | 'html' }): Promise<string>`
-- `splitReadableDocs(input: string): Promise<Array<{ section: string, title: string | null }>>`
+- `docToMarkdown(input: string, options: { type: 'url' | 'html' | 'markdown' }): Promise<string>`
+  - If `type` is `'markdown'`, returns input as-is.
+  - If unsupported type, throws a Not Implemented error.
+- `splitReadableDocs(input: string, options?: { type?: 'markdown' | 'url' | 'html' }): Promise<Array<{ title: string | null, content: string }>>`
+  - If `type` is omitted or `'markdown'`, splits input as markdown.
+  - If `type` is `'html'` or `'url'`, converts to markdown first, then splits.
 - `pdfToHtmlFromBuffer(buffer: ArrayBuffer): Promise<string>` - Convert PDF buffer to HTML
 
 ### PDF Buffer to HTML
@@ -113,3 +128,5 @@ npm run test:benchmark
 
 ## License
 MIT 
+
+Patch update: API and types for splitReadableDocs and docToMarkdown improved for clarity and flexibility. 
