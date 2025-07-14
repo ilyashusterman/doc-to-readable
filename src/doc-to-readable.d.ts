@@ -1,11 +1,11 @@
 export interface ReadableSection {
   title: string | null;
-  section: string;
+  content: string;
 }
 
 export interface DocToReadableOptions {
-  type: 'url' | 'html';
+  type: 'url' | 'html' | 'markdown';
 }
 
 export function docToMarkdown(input: string, options?: DocToReadableOptions): Promise<string>;
-export function splitReadableDocs(input: string): Promise<ReadableSection[]>; 
+export function splitReadableDocs(input: string, options?: DocToReadableOptions): Promise<ReadableSection[]>; 

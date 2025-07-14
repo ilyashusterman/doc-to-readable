@@ -23,7 +23,7 @@ describe('splitReadableDocs', () => {
     const sections = await splitReadableDocs(md);
     expect(sections.length).toBe(1);
     expect(sections[0].title).toBe(null);
-    expect(sections[0].section).toContain('Just some content');
+    expect(sections[0].content).toContain('Just some content');
   });
 
   it('ignores headers inside code blocks', async () => {
@@ -31,7 +31,7 @@ describe('splitReadableDocs', () => {
     const sections = await splitReadableDocs(md);
     expect(sections.length).toBe(1);
     expect(sections[0].title).toBe('Title');
-    expect(sections[0].section).toContain('Content after code');
+    expect(sections[0].content).toContain('Content after code');
   });
 
   it('handles empty input', async () => {
@@ -39,6 +39,18 @@ describe('splitReadableDocs', () => {
     const sections = await splitReadableDocs(md);
     expect(sections.length).toBe(1);
     expect(sections[0].title).toBe(null);
-    expect(sections[0].section).toBe('');
+    expect(sections[0].content).toBe('');
+  });
+
+  it('splits sections from HTML input using type: html', async () => {
+    const html = `<h1>Title 1</h1><p>Content 1</p><h2>Subtitle</h2><p>Content 2</p><h1>Title 2</h1><p>Content 3</p>`;
+    const sections = await splitReadableDocs(html, { type: 'html' });
+    expect(sections.length).toBeGreaterThan(1);
+    expect(sections[0].title).toBe('Title 1');
+    expect(sections[1].title).toBe('Subtitle');
+    expect(sections[2].title).toBe('Title 2');
+    expect(sections[0].content).toContain('Content 1');
+    expect(sections[1].content).toContain('Content 2');
+    expect(sections[2].content).toContain('Content 3');
   });
 }); 

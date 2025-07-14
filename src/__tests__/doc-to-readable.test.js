@@ -53,7 +53,7 @@ describe('splitReadableDocs', () => {
     const sections = await import('../doc-to-readable.js').then(m => m.splitReadableDocs(md));
     expect(sections.length).toBe(1);
     expect(sections[0].title).toBe(null);
-    expect(sections[0].section).toContain('Just some content');
+    expect(sections[0].content).toContain('Just some content');
   });
 
   it('ignores headers inside code blocks', async () => {
@@ -61,7 +61,7 @@ describe('splitReadableDocs', () => {
     const sections = await import('../doc-to-readable.js').then(m => m.splitReadableDocs(md));
     expect(sections.length).toBe(1);
     expect(sections[0].title).toBe('Title');
-    expect(sections[0].section).toContain('Content after code');
+    expect(sections[0].content).toContain('Content after code');
   });
 
   it('handles empty input', async () => {
@@ -69,6 +69,6 @@ describe('splitReadableDocs', () => {
     const sections = await import('../doc-to-readable.js').then(m => m.splitReadableDocs(md));
     expect(sections.length).toBe(1);
     expect(sections[0].title).toBe(null);
-    expect(sections[0].section).toBe('');
+    expect(sections[0].content).toBe('');
   });
 }); 
