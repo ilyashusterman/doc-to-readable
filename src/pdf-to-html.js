@@ -14,12 +14,12 @@ const workerPath = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjsVersion}/buil
 if (typeof window !== 'undefined' && typeof document !== 'undefined') {
   pdfjsLib.GlobalWorkerOptions.workerSrc = workerPath;
 } else {
-  console.log('Running in a non-browser environment, workerSrc not set.');
+  console.debug('Running in a non-browser environment, workerSrc not set.');
     }
     pdfjsAvailable = true;
   } catch (e) {
     pdfjsAvailable = false;
-    console.warn('[pdf-to-html] pdfjs-dist not available or failed to load. PDF conversion is disabled in this environment.');
+    console.debug('[pdf-to-html] pdfjs-dist not available or failed to load. PDF conversion is disabled in this environment.');
   }
   pdfjsInitialized = true;
 }
@@ -187,7 +187,7 @@ function detectTable(paragraphs, xTolerance) {
 export async function pdfToHtmlFromBuffer(arrayBuffer, customTitle = '') {
   await initPdfjs();
   if (!pdfjsAvailable) {
-    console.warn('[pdf-to-html] pdfjs-dist not available; cannot convert PDF to HTML.');
+    console.debug('[pdf-to-html] pdfjs-dist not available; cannot convert PDF to HTML.');
     throw new Error('pdfjs-dist not available; PDF conversion is disabled in this environment.');
   }
   try {
@@ -295,13 +295,13 @@ export async function pdfToHtmlFromBuffer(arrayBuffer, customTitle = '') {
           }
         }
       } catch (error) {
-        console.error(`Error processing page ${pageNum}:`, error);
+        console.debug(`Error processing page ${pageNum}:`, error);
         skippedText.push(`Page ${pageNum} processing failed: ${error.message}`);
       }
     }
 
     if (skippedText.length) {
-      console.warn('Skipped content:', skippedText);
+      console.debug('Skipped content:', skippedText);
     }
 
     html += '</article>\n';
@@ -328,7 +328,7 @@ ${html}
 </body>
 </html>`;
   } catch (error) {
-    console.error('Error processing PDF:', error);
+    console.debug('Error processing PDF:', error);
     return '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Error</title></head><body><p>Error processing PDF</p></body></html>';
   }
 }

@@ -10,7 +10,7 @@ import { Readability } from '@mozilla/readability';
 export function extractArticleFromDom(doc) {
   // Always use the imported Readability class
   if (!Readability) {
-    console.error('[extractArticleFromDom] Readability class not found');
+    console.debug('[extractArticleFromDom] Readability class not found');
     return '';
   }
   const reader = new Readability(doc);

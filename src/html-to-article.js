@@ -13,7 +13,7 @@ const DEFAULT_MAX_SIZE_BYTES = 2 * 1024 * 1024; // 2MB
 export async function htmlToArticle(htmlText, options = {}) {
   const maxSize = options.maxSizeBytes || DEFAULT_MAX_SIZE_BYTES;
   if (htmlText.length > maxSize) {
-    console.error(`[htmlToArticle] Input HTML exceeds ${maxSize} bytes. Use the bulk option for large files.`);
+    console.debug(`[htmlToArticle] Input HTML exceeds ${maxSize} bytes. Use the bulk option for large files.`);
     throw new Error(`Input HTML is too large (max ${maxSize} bytes). Please use the bulk option for large files.`);
   }
 

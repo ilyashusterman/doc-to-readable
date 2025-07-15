@@ -21,9 +21,14 @@ async function ensureDomPurifyInstance() {
 
 // DOMPurify config to remove styles, images, and CSS-related tags/attributes
 const PURIFY_CONFIG = {
-  FORBID_TAGS: ['style', 'img', 'link'],
-  FORBID_ATTR: ['style'],
-  ALLOWED_TAGS: ['title', 'head', 'body', 'main', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'div', 'span', 'a', 'ul', 'ol', 'li', 'blockquote', 'pre', 'code', 'em', 'strong', 'b', 'i', 'u', 's', 'del', 'ins', 'mark', 'small', 'sub', 'sup', 'br', 'hr', 'table', 'thead', 'tbody', 'tr', 'th', 'td', 'caption', 'colgroup', 'col']
+  FORBID_TAGS: [
+    'style', 'img', 'script', 'audio', 'video', 'picture', 'source', 'track', 'iframe', 'embed', 'object', 'canvas', 'svg', 'map', 'area',
+    'form', 'input', 'button', 'select', 'option', 'textarea', 'label', 'fieldset', 'legend', 'datalist', 'output',
+    'noscript', 'template', 'applet', 'link', 'meta', 'base', 'frame', 'frameset', 'param'
+  ],
+  ALLOWED_ATTR: [], // Remove all attributes
+  ALLOW_DATA_ATTR: false, // Remove data-* attributes
+  ALLOW_ARIA_ATTR: false, // Remove aria-* attributes
 };
 
 // Helper to sanitize HTML

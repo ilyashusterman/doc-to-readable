@@ -45,13 +45,13 @@ export async function universalFetch(url, options = {}) {
     }
   } catch (error) {
     // Log the error for debugging
-    console.error(`[universalFetch] Error fetching ${url}:`, error.message);
+    console.debug(`[universalFetch] Error fetching ${url}:`, error.message);
     throw error; // Re-throw to allow calling code to handle it
   }
 }
 
 export async function fetchHtml(url, options = {}) {
-    console.log('fetchHtml', url, options);
+    console.debug('fetchHtml', url, options);
     const res = await universalFetch(url, options);
     const contentType = res.headers.get('content-type') || '';
     const isHtml = contentType.toLowerCase().includes('text/html') || contentType.toLowerCase().includes('application/xhtml+xml');
@@ -63,7 +63,7 @@ export async function fetchHtml(url, options = {}) {
     if (isPdf) {
       const arrayBuffer = await res.arrayBuffer();
       const html =  await pdfToHtmlFromBuffer(arrayBuffer);
-      console.log('html', html);
+      console.debug('html', html);
       return html;
 
     }
